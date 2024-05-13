@@ -91,35 +91,35 @@ public class BookingDAO extends DAO{
 		return result;
 	}
 
-	public ArrayList<Booking> getBookingOfCourt(int idcourt, Date startDate, Date endDate){
+	public ArrayList<Booking> getBookingOfCourt(int court_id, Date startDate, Date endDate){
 		ArrayList<Booking> result = new ArrayList<Booking>();
-		String sql = "SELECT a.id as idbookedcourt, GREATEST(a.checkin,?) as checkin, LEAST(a.checkout,?) as checkout, a.price, a.saleoff as courtsaleoff,"
-				+ "b.id as idbooking, b.saleoff as bookingsaleoff,"
-				+ " c.id as idclient, c.name, c.address, c.idcard, c.tel"
-				+ " FROM tblBookedCourt a, tblBooking b, tblClient c WHERE a.idcourt = ? AND a.ischeckin = 1 "
-				+ "AND a.checkout > ? AND a.checkin < ? AND b.id = a.idbooking AND c.id = b.idclient";
+		String sql = "SELECT a.id as bookedCourt_id, GREATEST(a.checkin,?) as checkin, LEAST(a.checkout,?) as checkout, a.price, a.saleoff as courtsaleoff,"
+				+ "b.id as booking_id, b.saleoff as bookingsaleoff,"
+				+ " c.id as client_id, c.name, c.address, c.idcard, c.tel"
+				+ " FROM tblBookedCourt a, tblBooking b, tblClient c WHERE a.court_id = ? AND a.ischeckin = 1 "
+				+ "AND a.checkout > ? AND a.checkin < ? AND b.id = a.booking_id AND c.id = b.client_id";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try{
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, sdf.format(startDate));
 			ps.setString(2, sdf.format(endDate));
-			ps.setInt(3, idcourt);
+			ps.setInt(3, court_id);
 			ps.setString(4, sdf.format(startDate));
 			ps.setString(5, sdf.format(endDate));
 			ResultSet rs = ps.executeQuery();
 
 			while(rs.next()){
 				Booking b = new Booking();
-				b.setId(rs.getInt("idbooking"));
+				b.setId(rs.getInt("booking_id"));
 				b.setSaleoff(rs.getFloat("bookingsaleoff"));
 				Client c = new Client();
-				c.setId(rs.getInt("idclient"));
+				c.setId(rs.getInt("client_id"));
 				c.setName(rs.getString("name"));
 				c.setAddress(rs.getString("address"));
 				c.setIdCard(rs.getString("idcard"));
 				b.setClient(c);
 				BookedCourt bc = new BookedCourt();
-				bc.setId(rs.getInt("idbookedcourt"));				
+				bc.setId(rs.getInt("bookedcourt_id"));				
 				bc.setSaleoff(rs.getFloat("courtsaleoff"));
 				bc.setPrice(rs.getFloat("price"));
 				bc.setCheckin(rs.getDate("checkin"));

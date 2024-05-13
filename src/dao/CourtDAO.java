@@ -56,7 +56,7 @@ public class CourtDAO extends DAO{
 	
 	public ArrayList<MiniCourt> searchFreeCourt(Date checkin, Date checkout){
 		ArrayList<MiniCourt> result = new ArrayList<MiniCourt>();
-		String sql = "SELECT * FROM tblMiniCourt WHERE id NOT IN (SELECT idcourt FROM tblBookedCourt WHERE checkout > ? AND checkin < ?)";
+		String sql = "SELECT * FROM tblMiniCourt WHERE id NOT IN (SELECT court_id FROM tblBookedCourt WHERE checkout > ? AND checkin < ?)";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try{
 			PreparedStatement ps = con.prepareStatement(sql);
